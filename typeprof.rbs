@@ -1,0 +1,84 @@
+# TypeProf 0.21.1
+
+# Classes
+module ActiveRecord
+  class Base
+    def self.primary_abstract_class: -> untyped
+    def self.has_many: (Symbol) -> untyped
+    def self.belongs_to: (Symbol) -> untyped
+    def self.validates: (Symbol, presence: bool) -> untyped
+    def self.scope: (Symbol, ^() -> untyped) -> ActiveRecord::Relation
+    def self.eager_load: (*Symbol) -> self
+    def self.order: (*Symbol) -> self
+    def self.after_create_commit: (^() -> untyped) -> untyped
+    def self.after_update_commit: (^() -> untyped) -> untyped
+    def self.after_destroy_commit: (^() -> untyped) -> untyped
+    def self.broadcast_append_to: (String) -> untyped
+    def self.broadcast_update_to: (String) -> untyped
+    def self.broadcast_remove_to: (String) -> untyped
+    def self.new: (?ActionController::Parameters) -> instance
+    def self.all: -> ActiveRecord::Relation
+    def self.find: (Integer) -> instance
+    def save: -> bool
+    def update: (ActionController::Parameters) -> bool
+    def destroy: -> bool
+  end
+
+  class Relation
+  end
+end
+
+class ApplicationRecord < ActiveRecord::Base
+end
+
+module ActionController
+  class Parameters
+    def []: (Symbol) -> untyped
+    def require: (*Symbol) -> self
+    def permit: (*Symbol) -> self
+  end
+
+  class Base
+    def self.before_action: (Symbol) -> untyped
+    def redirect_to: (String | ApplicationRecord, notice: String) -> bool
+    def render: (Symbol, status: Symbol) -> bool
+    def params: -> ActionController::Parameters
+  end
+end
+
+class ApplicationController < ActionController::Base
+end
+
+module Bustime
+  class Application
+  end
+end
+
+class BusLine < ApplicationRecord
+end
+
+class BusSchedule < ApplicationRecord
+  def self.list_all: -> ActiveRecord::Relation
+end
+
+module ViewHelper
+  def bus_lines_url: -> String
+  def bus_schedules_url: -> String
+end
+
+class BusLinesController < ApplicationController
+  include ViewHelper
+  @bus_line: BusLine
+  @bus_lines: ActiveRecord::Relation
+end
+
+class BusSchedulesController < ApplicationController
+  include ViewHelper
+  @bus_schedule: BusSchedule
+  @bus_schedules: ActiveRecord::Relation
+end
+
+class ListBusSchedulesController < ApplicationController
+  include ViewHelper
+  @bus_schedules: ActiveRecord::Relation
+end
