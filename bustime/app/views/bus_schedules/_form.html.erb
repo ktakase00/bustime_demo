@@ -1,0 +1,36 @@
+<%= form_with(model: bus_schedule) do |form| %>
+  <% if bus_schedule.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(bus_schedule.errors.count, "error") %> prohibited this bus_schedule from being saved:</h2>
+
+      <ul>
+        <% bus_schedule.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :departure_hour, style: "display: block" %>
+    <%= form.text_field :departure_hour %>
+  </div>
+
+  <div>
+    <%= form.label :departure_minute, style: "display: block" %>
+    <%= form.text_field :departure_minute %>
+  </div>
+
+  <div>
+    <%= form.label :bus_line_id, style: "display: block" %>
+    <%=
+      form.select :bus_line_id do
+        options_for_select(bus_lines.map { |bus_line| [bus_line.name, bus_line.id] })
+      end
+    %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
